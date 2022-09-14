@@ -46,7 +46,7 @@ The adversary can deanonymise all messages travel through a path that is compose
     cd integration_test
     bash run_integration_test.sh
     ```
-    Here, four mixnet topological construction algorithms are used to generate mixnet topologies in a dynamic and static setting seperately; the results are saved under the directory of "./integration_test/logs/*algorithm*_dynamic/". We consider the natural network churn in the dynamic setting while mixes are assumed to always online in the static setting. The output of the console is redirected to the text file "./integration_test/logs/console_log.txt". 
+    Here, four mixnet topological construction algorithms are used to generate mixnet topologies in a dynamic and static setting seperately; the results are saved under the directory of `./integration_test/logs/*algorithm*_dynamic/`. We consider the natural network churn in the dynamic setting while mixes are assumed to always online in the static setting. The output of the console is redirected to the text file `./integration_test/logs/console_log.txt`. 
 
 ## An example & results
 
