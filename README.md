@@ -1,9 +1,9 @@
 # MTG_simulator (Mixnet Topology Generator Simulator)
 
 ### Introduction
-This is the simulator for mixnet topological construction algorithms.
+This is the simulator for simulating mixnet topological construction algorithms.
 We implemented a scalable Mixnet construction model with the four mixnet construction 
-algorithms in Python. We use Gurobi 
+algorithms (i.e., bwrand, randrand, randbp, and bowtie) in Python. We use Gurobi 
 optimizer to solve the linear bin-packing 
 optimization problem.
 
@@ -14,23 +14,42 @@ bandwidth data captured from [Tor](https://metrics.torproject.org/rs.html#search
 from January 2021 to March 2021.
 Among three common right-skewed distributions
 we choose the gamma distribution as the best-fitted via maximum 
-likelihood estimation (MLE) method.
+likelihood estimation (MLE) method. Given the number of mixes, MTG can generate a pool of mix nodes in any size. In order to show the comparison between four algorithms, we run the simulator with the same set of benign mix nodes (i.e., data from Benign_Mixes/1000_benignmix.csv).
 
-### Advresarial Model
-In our simulation, we consider a strategic adversary who can maximise the
-quantity of traffic they are 
-expected to compromise 
-by controlling the number of malicious mixes and their bandwidths.
-1. naive adversary: the adversary distributes all bandwidth resources evenly
-across their malicious mixes
-2. smart adversary: the adversary allocates bandwidth resources unevenly across their malicious mixes.
+### Technical goal
+The objective of this tool is to generate the mixnet topologies assuming a strategic adversary who has a fixed budget to operate mixnodes with different construction algorithm. The generated topological configuration is determined by the construction algorithm, clearly showing the position of each mixnodes in every epoch. The detailed topological configuration data is stored in "logs/xxx_layout.csv"
 
-### Run
-To run this simulator, please follow the following steps:
+The adversary can deanonymise all messages travel through a path that is composed of all malicious mixes. Thus, the security of the generated network is evaluated by the fraction of total paths in the network topology that are fully compromised (i.e., comprosed entirely of the adversarial relays). This metric is shown in the output log file ("attack_profit" in "logs/xxx_log.csv").
+
+
+### Getting started
+
+1. System setup:
+    - Python version 3.7+
+2. Install [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/)
+    1. download [Gurobi Optimizer](https://www.gurobi.com/downloads/)
+    2. After downloading, follow the instructions in README.txt to install the software.
+    3. Once installed, visit the [Free Academic License](https://www.gurobi.com/downloads/end-user-license-agreement-academic/) page to request the free license.
+    4. Next, run grbgetkey using the argument provided on the Academic License Detail page (ex: grbgetkey ae36ac20-16e6-acd2-f242-4da6e765fa0a). 
+   
+   See [Other Installation Methods](https://www.gurobi.com/academia/academic-program-and-licenses/) if
+    you're using other licenses.
+   
+   <!-- python -m pip install gurobipy -->
+3. Install dependencies
+    ```
+    bash mtg_install_dependencies.sh
+    ```
+4. Run tests:
+    ```
+    cd integration_test
+    bash run_integration_test.sh
+    ```
+<!-- To run this simulator, please follow the following steps:
 - Install python3
 - Install [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/)
 - Change parameters in run_simulation.sh to approriate values
-- Run ./run_simulation.sh in the terminal
+- Run ./run_simulation.sh in the terminal -->
 
 ### Notions
 | Symbol      | Description |
