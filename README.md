@@ -51,8 +51,8 @@ The adversary can deanonymise all messages travel through a path that is compose
 - Change parameters in run_simulation.sh to approriate values
 - Run ./run_simulation.sh in the terminal -->
 
-### Notions
+<!-- ### Notions
 | Symbol      | Description |
 | ----------- | ----------- |
 | $\alpha$    | malicious fraction|
-| h           | sample threshold        |
+| h           | sample threshold        | -->
