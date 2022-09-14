@@ -26,6 +26,7 @@ The adversary can deanonymise all messages travel through a path that is compose
 
 1. Prerequisite:
     - Python version 3.7+
+    - Recent linux/unix operating system (e.g., Ubuntu 20.04 or Mac os 12+)
 2. Install [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/)
     1. download [Gurobi Optimizer](https://www.gurobi.com/downloads/)
     2. After downloading, follow the instructions in README.txt to install the software.
@@ -37,25 +38,26 @@ The adversary can deanonymise all messages travel through a path that is compose
    
    <!-- python -m pip install gurobipy -->
 3. Install dependencies
-    ```
+    ```bash
     bash mtg_install_dependencies.sh
     ```
 4. Run examples:
-    ```
+    ```bash
     cd integration_test
     bash run_integration_test.sh
     ```
-<!-- To run this simulator, please follow the following steps:
-- Install python3
-- Install [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/)
-- Change parameters in run_simulation.sh to approriate values
-- Run ./run_simulation.sh in the terminal -->
+    Here, four mixnet topological construction algorithms are used to generate mixnet topologies in a dynamic and static setting seperately; the results are saved under the directory of "./integration_test/logs/*algorithm*_dynamic/". We consider the natural network churn in the dynamic setting while mixes are assumed to always online in the static setting. The output of the console is redirected to the text file "./integration_test/logs/console_log.txt". 
 
-<!-- ### Notions
-| Symbol      | Description |
-| ----------- | ----------- |
-| $\alpha$    | malicious fraction|
-| h           | sample threshold        | -->
+## An example
 
-## Examples
+### Example of bowtie topological construction algorithm with network churn
+Here, we take *bowtie* in a *dynamic* setting as an example to illustrate the specific details.
+After calling this function ==dynamic_simulation("bowtie")==, MTG generator will simulate the configuration process for *epoch_num* (see "./integration_test/config_template.json") epochs.
+The programing runtime can be reduced with fewer epochs (we have *epoch_num*=20 in the examples). Another important parameter in "config_template.json" file is "construction"-"sample_fraction" that indicates the relative size of mixes' bandwidth being selected into mixnet from mix pool. "adversary""bw_fraction" is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
+
+Three csv files are saved in the path "./integration_test/logs/bowtie_dynamic", we illustrate the most important two documents:
+- *bowtie_dynamic_layout.csv* records the specific topologies of each mix node during every epoch. We use four digits to represent the position of mixes: -1: mix was not in the network, 0/1/2: mix was in layer0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
+
+- *bowtie_dynamic_log.csv* shows the 
+
 
