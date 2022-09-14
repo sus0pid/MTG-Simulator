@@ -1,4 +1,4 @@
-# MTG_simulator (Mixnet Topology Generator Simulator)
+# MTG (Mixnet Topology Generator)
 
 ## Introduction
 This is the simulator for simulating mixnet topological construction algorithms.
@@ -19,7 +19,7 @@ likelihood estimation (MLE) method. Given the number of mixes, MTG can generate 
 ## Technical goal
 The objective of this tool is to generate the mixnet topologies assuming a strategic adversary who has a fixed budget to operate mixnodes with different construction algorithm. The generated topological configuration is determined by the construction algorithm, clearly showing the position of each mixnodes in every epoch. The detailed topological configuration data is stored in "logs/xxx_layout.csv"
 
-The adversary can deanonymise all messages travel through a path that is composed of all malicious mixes. Thus, the security of the generated network is evaluated by the fraction of total paths in the network topology that are fully compromised (i.e., comprosed entirely of the adversarial relays). This metric is shown in the output log file ("attack_profit" in "logs/xxx_log.csv").
+The adversary can deanonymise all messages travel through a path that is composed of all malicious mixes. Thus, the security of the generated network is evaluated by the fraction of total paths in the network topology that are fully compromised (i.e., comprosed entirely of the adversarial relays). This metric is shown in the output log file (`attack_profit` in `logs/xxx_log.csv`).
 
 
 ## Getting started
