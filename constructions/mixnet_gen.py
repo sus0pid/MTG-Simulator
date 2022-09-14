@@ -58,8 +58,7 @@ def get_batch_bw_static(mixnet, batch_threshold):
     # batch_bw:  bandwidth threshold for selection excluding fixed middle layer
         try:
             all_mixes = [m for m in mixnet.mix_pool if m not in mixnet.mix_net[GUARD_LAYER]]
-            # batch_bw  = batch_threshold * mixnet.total_bw - sumup.sum_mix_bw(mixnet.mix_net[GUARD_LAYER])
-            batch_bw = 2 * sumup.sum_mix_bw(mixnet.mix_net[GUARD_LAYER])
+            batch_bw  = batch_threshold * mixnet.total_bw - sumup.sum_mix_bw(mixnet.mix_net[GUARD_LAYER])
         except TypeError as e:
             print('Error Occured: e')
             print('='*20)
@@ -120,17 +119,16 @@ def select_by_rand(mixnet, all_mixes, batch_bw):
             break
 
 
-def hybrid_mixnet(mixnet, batch_threshold, bp_method, e, select_mode):
-    all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
+def hybrid_mixnet(mixnet, batch_threshold, e, select_mode, bp_method="lp"):
     # use bw to sample guard layer
     # use randomness to sample other layers
     assert(mixnet.guard == True)
     if e == 0:
+        all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
         print("+"*10, "Guard Layer Sampling", "+"*10)
         print(f'guard: {mixnet.guard}, is_dirty: {mixnet.is_dirty}')
         mixnet.is_dirty = True
         mixnet.mix_net[GUARD_LAYER] = []
-
         # select guard layer if is_dirty == false
         while True:
             weights      =  [m.bandwidth / sumup.sum_mix_bw(all_mixes) for m in all_mixes]
@@ -144,31 +142,41 @@ def hybrid_mixnet(mixnet, batch_threshold, bp_method, e, select_mode):
                 break
         # mixnet.disp_mixnet()
 
-    if select_mode == "hybrid":
-        # select other layers
-        mixnet.mix_select   = [] 
-        all_mixes, batch_bw = get_batch_bw(mixnet, batch_threshold)
-        select_by_rand(mixnet, all_mixes, batch_bw)
+        if select_mode == "rand":
+            # select other layers
+            mixnet.mix_select   = [] 
+            all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
+            select_by_rand(mixnet, all_mixes, batch_bw)
 
-        # place other layers
-        mix_place("bp", mixnet, batch_threshold, bp_method)
-    elif select_mode == "bw":
-        # select other layers
-        mixnet.mix_select   = [] 
-        all_mixes, batch_bw = get_batch_bw(mixnet, batch_threshold)
-        select_by_bw(mixnet, all_mixes, batch_bw)
+            # place other layers
+            mix_place("bp", mixnet, batch_threshold, bp_method)
+        elif select_mode == "constraint":
+            # select other layers
+            mixnet.mix_select   = [] 
+            all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
+            new_mixes_pool = [m for m in all_mixes if m.bandwidth >= 1]
+            select_by_rand(mixnet, new_mixes_pool, batch_bw)
+            # place other layers
+            mix_place("bp", mixnet, batch_threshold, bp_method)
+    elif e > 0:
+        mixnet.mix_net["layer_0"] = []
+        mixnet.mix_net["layer_2"] = []
+        if select_mode == "rand":
+            # select other layers
+            mixnet.mix_select   = [] 
+            all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
+            select_by_rand(mixnet, all_mixes, batch_bw)
+            # place other layers
+            mix_place("bp", mixnet, batch_threshold, bp_method)
+        elif select_mode == "constraint":
+            # select other layers
+            mixnet.mix_select   = [] 
+            all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
+            new_mixes_pool = [m for m in all_mixes if m.bandwidth >= 1]
+            select_by_rand(mixnet, new_mixes_pool, batch_bw)
+            # place other layers
+            mix_place("bp", mixnet, batch_threshold, bp_method)
 
-        # place other layers
-        mix_place("bp", mixnet, batch_threshold, bp_method)
-    elif select_mode == "limit":
-        # select other layers
-        mixnet.mix_select   = [] 
-        all_mixes, batch_bw = get_batch_bw(mixnet, batch_threshold)
-        new_mixes_pool = [m for m in all_mixes if m.bandwidth >= 1]
-        select_by_rand(mixnet, new_mixes_pool, batch_bw)
-
-        # place other layers
-        mix_place("bp", mixnet, batch_threshold, bp_method)
 
 
 

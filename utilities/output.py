@@ -2,8 +2,7 @@ import os
 import csv
 import pandas as pd
 
-def create_log_csv(args, nm=0):
-
+def create_log_csv(config):
     attack_header = ['epoch', 'num_malicious', 'mal_frac', 'batch_th', 'total_bw', 
                 'num_bad_l0', 'num_bad_guard', 'num_bad_l2',
                 'num_lay_l0', 'num_guard', 'num_lay_l2', 
@@ -13,18 +12,37 @@ def create_log_csv(args, nm=0):
                 'circuit_controlled', 'attack_profit', 'attack_succ', 
                 'num_guards']
 
-    with open(os.path.join(args.output_dir, '{0}_{1}_{2}_{3}_log.csv'.\
-                            format(args.adv_type, args.select_mode, args.place_mode, args.binpack_solver)), 'w') as atfile:
+    with open(os.path.join(config["log_dir"], '{0}_{1}_log.csv'.format(config["algorithm"], config["network"]["setting"])), 'w') as atfile:
         row = (',').join(attack_header)
         atfile.write(row)
         atfile.write('\n')
 
     time_column   = ['num_malicious', 'time_spent(second)']
-    with open(os.path.join(args.output_dir, '{0}_{1}_{2}_{3}_time.csv'.\
-                            format(args.adv_type, args.select_mode, args.place_mode, args.binpack_solver)), 'w') as tfile:
+    with open(os.path.join(config["log_dir"], '{0}_{1}_time.csv'.format(config["algorithm"], config["network"]["setting"])), 'w') as tfile:
         row = (',').join(time_column)
         tfile.write(row)
         tfile.write('\n')
+
+def create_layout_csv(config, mix_pool):
+    # df.insert(loc=0, column='mix_id', value=[i for i in range(num_mix)])
+    mix_ids = [i for i in range(len(mix_pool))]
+    bws  = [0] * len(mix_pool) # nodes that are not existed
+    mals = [False] * len(mix_pool)
+    for m in mix_pool:
+        bws[m.mix_id] = m.bandwidth
+        mals[m.mix_id] = m.malicious
+    data = {
+        "mix_id": mix_ids,
+        "bandwidth": bws,
+        "malicious": mals
+    }
+    # df.insert(loc=1, column='bandwidth', value=bws)
+    # df.insert(loc=2, column='malicious', value=mals)
+    df = pd.DataFrame(data)
+    path = os.path.join(config["log_dir"], "{0}_{1}_layout.csv".format(config["algorithm"], config["network"]["setting"]))
+    df.to_csv(path, index=False)
+
+    
 
 def create_batch_log_csv(args):
     attack_header = ['epoch', 'num_malicious', 'mal_frac', 'batch_th', 'total_bw', 
@@ -102,13 +120,22 @@ def write_attack_log(config, atk_logs):
                     'bw_frac_l0', 'bw_frac_guard', 'bw_frac_l2', 
                     'circuit_controlled', 'attack_profit', 'attack_succ', 
                     'num_guards']
-    with open(os.path.join(config["log_dir"], '{0}_{1}_{2}_log.csv'.\
-                        format(config["network"]["setting"], 
-                                config["algorithm"], \
-                                config["network"]["churn_rate"]["leave_rate"])), 'w') as attackfile:
-                                        atk_logs.insert(0, attack_header)
-                                        at_writer = csv.writer(attackfile)
-                                        at_writer.writerows(atk_logs)
+    if config["network"]["setting"] == "dynamic":
+        with open(os.path.join(config["log_dir"], '{0}_{1}_log.csv'.\
+                            format( config["algorithm"], 
+                                    config["network"]["setting"]
+                                    # config["network"]["churn_rate"]["leave_rate"]
+                                    )), 'w') as attackfile:
+                                            atk_logs.insert(0, attack_header)
+                                            at_writer = csv.writer(attackfile)
+                                            at_writer.writerows(atk_logs)
+    else:
+        with open(os.path.join(config["log_dir"], '{0}_{1}_log.csv'.\
+                    format( config["algorithm"], 
+                            config["network"]["setting"])), 'w') as attackfile:
+                                    atk_logs.insert(0, attack_header)
+                                    at_writer = csv.writer(attackfile)
+                                    at_writer.writerows(atk_logs)
 
 def write_layout(config, layouts, mix_pool):
     layout_data = {}
@@ -130,9 +157,11 @@ def write_layout(config, layouts, mix_pool):
     df.insert(loc=2, column='malicious', value=mals)
     
     if config["network"]["setting"] == "dynamic":
-        path = os.path.join(config["log_dir"], "{0}_{1}_{2}_layout.csv".format(config["network"]["setting"], config["algorithm"], config["network"]["churn_rate"]["leave_rate"]))
+        path = os.path.join(config["log_dir"], "{0}_{1}_layout.csv".format(config["algorithm"], config["network"]["setting"]
+        # , config["network"]["churn_rate"]["leave_rate"]
+        ))
     elif config["network"]["setting"] == "static":
-        path = os.path.join(config["log_dir"], "{0}_{1}_layout.csv".format(config["network"]["setting"], config["algorithm"]))
+        path = os.path.join(config["log_dir"], "{0}_{1}_layout.csv".format(config["algorithm"], config["network"]["setting"]))
     df.to_csv(path, index=False)
 
 def write_onoff(config, on_offs, mixnet):
@@ -144,7 +173,7 @@ def write_onoff(config, on_offs, mixnet):
         on_off_data["epoch_{}".format(idx)] = on_off_col
     df = pd.DataFrame(on_off_data)
     df.insert(loc=0, column='mix_id', value=[i for i in range(num_mix)])
-    path = os.path.join(config["log_dir"], "{0}_{1}_{2}_onoff.csv".format(config["network"]["setting"], config["algorithm"], config["network"]["churn_rate"]["leave_rate"]))
+    path = os.path.join(config["log_dir"], "{0}_{1}_{2}_onoff.csv".format(config["algorithm"], config["network"]["setting"], config["network"]["churn_rate"]["leave_rate"]))
     df.to_csv(path, index=False)
 
 def write_gg_times(config, mixnet):
@@ -153,5 +182,5 @@ def write_gg_times(config, mixnet):
         "gg_times": [m.GG_times for m in mixnet.mix_pool]
     }
     df = pd.DataFrame(data)
-    path = os.path.join(config["log_dir"], "{0}_{1}_{2}_ggtimes.csv".format(config["network"]["setting"], config["algorithm"], config["network"]["churn_rate"]["leave_rate"]))
+    path = os.path.join(config["log_dir"], "{0}_{1}_{2}_ggtimes.csv".format(config["algorithm"], config["network"]["setting"], config["network"]["churn_rate"]["leave_rate"]))
     df.to_csv(path, index=False)

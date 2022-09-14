@@ -1,0 +1,29 @@
+{
+    "experiment_id": "Simulation of Mixnet Topology Generation", 
+    "network": 
+    {
+        "topology": "stratified", 
+        "setting": "dynamic", 
+        "churn_rate": {
+            "leave_rate": 0.015, 
+            "back_rate": 0.012, 
+            "new_good_rate": 0.003, 
+            "new_bad_rate": 0.001
+        }, 
+        "guard": {
+            "enabled": "False",
+            "eliminate_interval": 5, 
+            "stability_lower_bound": 0.1
+        }
+    }, 
+    "construction": {
+        "sample_fraction": 0.75
+    }, 
+    "adversary": {
+        "bw_fraction": 0.2, 
+        "num_malicious_nodes": 20
+    },
+    "epoch_num": 10,
+    "algorithm": "bwrand",
+    "num_processes": 4
+}

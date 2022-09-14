@@ -10,7 +10,7 @@ import os
 # import mix_churn as mc
 
 
-def cmpLog(mixnet, mal_bw_frac, batch_threshold, adv_type = "naive", setting = "static"):
+def cmpLog(mixnet, mal_bw_frac, batch_threshold, setting = "static", adv_type = "naive"):
     # print('>>>start cmp log data------')
 
     # each selection will generate a new layer_for_nodes list
@@ -19,6 +19,7 @@ def cmpLog(mixnet, mal_bw_frac, batch_threshold, adv_type = "naive", setting = "
     attack_succ = True if 0 not in mixnet.bad_num else False
     try:
         attack_profit = np.prod([bb / lb for (bb, lb) in list(zip(mixnet.bad_bw, mixnet.layer_bw))])
+        print(attack_profit)
                                                                 # adversary bandwidth proportion
         circuit_profit = np.prod([bn / ln for (bn, ln) in list(zip(mixnet.bad_num, mixnet.layer_num))])  
                                                                 # adversary circuit proportion
