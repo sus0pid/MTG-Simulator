@@ -63,9 +63,24 @@ Another important parameter in `config_template.json` file is `construction:samp
 
 `adversary:bw_fraction` is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
 
-Three csv files are saved in the path `./integration_test/logs/bowtie_dynamic`, we illustrate the most important two documents:
-- `bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of mixes: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
+Three csv files generated with the path `./integration_test/logs/bowtie_dynamic` are illustrated below:
 
-- `bowtie_dynamic_log.csv` shows the 
+- `bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of each mix: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
+
+- `bowtie_dynamic_log.csv` shows the information of the mixnet during each epoch and the definition of important column is listed below.
+| Column_name | Description |
+| ----------- | ----------- |
+| num_malicious|number of malicious mixes |
+| mal_frac     |fraction of malicious bandwidth|
+|batch_th      |sampling fraction|
+|total_bw      |total bandwidth of mix pool|
+|num_bad_l0/guard/l2    |number of malicious mix in layer0/1/2|
+|num_lay_l0/guard/l2| number of mixes in layer0/1/2|
+|bad_bw_l0/guard/l2| sum of bandwidth of malicious mixes in layer0/1/2|
+|lay_bw_l0/guard/l2| bandwidth of layer0/1/2|
+|bw_frac_l0/guard/l2| fraction of total_bw|
+|attack_profit     | end-to-end compromised fraction of paths|
+|attack_succ     | whether the adversary controls at least one end-to-end path|
+
 
 
