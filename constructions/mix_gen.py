@@ -15,14 +15,13 @@ def gen_ben_mixes(num_benign, mal_bw_frac):
     mal_bw_frac / ben_bw_frac = 20% / 80% by default
     The number of benign mixes: 1000 by default
     """
-    print('......start generating benign mixes......')
+    print('>>>Generating benign mixes......')
     shape, scale = 0.6520738, 1 / 0.0676395
     benign_bw = list(np.random.gamma(shape, scale, num_benign))
     total_bw = sum(benign_bw) / (1 - mal_bw_frac)
     benign_mixes = [Mix(i, benign_bw[i]) for i in range(num_benign)]
-    print(f'>>>>>>total bandwidth: {total_bw} MB/s')
-    print(f'>>>>>>num of benign: {len(benign_bw)}')
-    print('......end generating benign mixes......')
+    print(f'>>>Total bandwidth: {total_bw} MB/s')
+    print(f'>>>Num of benign: {len(benign_bw)}')
     return benign_mixes, total_bw
 
 
@@ -42,6 +41,7 @@ def write_mixes(mix_list, filename):
 def fetch_mixes(filename, mal_bw_frac):
     mix_list = []
     try:
+        print('>>>Generating benign mixes......')
         with open(filename, 'r') as f:
             lines = f.readlines()
             for line in lines[1:]:
@@ -64,7 +64,7 @@ def gen_mixes(adv_type, mal_num, benign_mix_file, num_benign, mal_bw_frac):
     select = 'rand': reassign total count --- NYM/Random
     """
 
-    print(f'>>>Start generating {adv_type} malicious mixes......')
+    print(f'>>>Generating malicious mixes......')
 
     benign_mixes = fetch_mixes(os.path.join(benign_mix_file,
                                             "{0}_benignmix.csv".format(num_benign)), mal_bw_frac)
@@ -92,8 +92,6 @@ def gen_mixes(adv_type, mal_num, benign_mix_file, num_benign, mal_bw_frac):
         #mix_pool = smart_mix_gen2(benign_mixes, mal_bw_frac, total_bw, mal_num)
         mix_pool = smart_ffd_mix_gen(
             benign_mixes, mal_bw_frac, total_bw)  # for randffd
-
-    print(f'>>>End generating {adv_type} malicious mixes......')
     return mix_pool
 
 

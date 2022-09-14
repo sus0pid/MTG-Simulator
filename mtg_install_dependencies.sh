@@ -10,6 +10,8 @@ sudo apt-get update || exit 1
 
 python3 -m pip install gurobipy || exit 1
 
+# run the program on the empty ubuntu virtual machine to make sure what are the procedures
+
 
 # satgenpy
 # echo "Installing dependencies for satgenpy..."

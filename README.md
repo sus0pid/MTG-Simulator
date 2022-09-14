@@ -1,6 +1,6 @@
 # MTG_simulator (Mixnet Topology Generator Simulator)
 
-### Introduction
+## Introduction
 This is the simulator for simulating mixnet topological construction algorithms.
 We implemented a scalable Mixnet construction model with the four mixnet construction 
 algorithms (i.e., bwrand, randrand, randbp, and bowtie) in Python. We use Gurobi 
@@ -16,15 +16,15 @@ Among three common right-skewed distributions
 we choose the gamma distribution as the best-fitted via maximum 
 likelihood estimation (MLE) method. Given the number of mixes, MTG can generate a pool of mix nodes in any size. In order to show the comparison between four algorithms, we run the simulator with the same set of benign mix nodes (i.e., data from Benign_Mixes/1000_benignmix.csv).
 
-### Technical goal
+## Technical goal
 The objective of this tool is to generate the mixnet topologies assuming a strategic adversary who has a fixed budget to operate mixnodes with different construction algorithm. The generated topological configuration is determined by the construction algorithm, clearly showing the position of each mixnodes in every epoch. The detailed topological configuration data is stored in "logs/xxx_layout.csv"
 
 The adversary can deanonymise all messages travel through a path that is composed of all malicious mixes. Thus, the security of the generated network is evaluated by the fraction of total paths in the network topology that are fully compromised (i.e., comprosed entirely of the adversarial relays). This metric is shown in the output log file ("attack_profit" in "logs/xxx_log.csv").
 
 
-### Getting started
+## Getting started
 
-1. System setup:
+1. Prerequisite:
     - Python version 3.7+
 2. Install [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/)
     1. download [Gurobi Optimizer](https://www.gurobi.com/downloads/)
@@ -40,7 +40,7 @@ The adversary can deanonymise all messages travel through a path that is compose
     ```
     bash mtg_install_dependencies.sh
     ```
-4. Run tests:
+4. Run examples:
     ```
     cd integration_test
     bash run_integration_test.sh
@@ -56,3 +56,6 @@ The adversary can deanonymise all messages travel through a path that is compose
 | ----------- | ----------- |
 | $\alpha$    | malicious fraction|
 | h           | sample threshold        | -->
+
+## Examples
+

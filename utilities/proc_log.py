@@ -15,7 +15,7 @@ def cmpLog(mixnet, mal_bw_frac, batch_threshold, setting = "static", adv_type = 
 
     # each selection will generate a new layer_for_nodes list
     # each list will be written into layer_for_nodes.csv as a column
-    mixnet.disp_mixnet()
+    # mixnet.disp_mixnet()
     attack_succ = True if 0 not in mixnet.bad_num else False
     try:
         attack_profit = np.prod([bb / lb for (bb, lb) in list(zip(mixnet.bad_bw, mixnet.layer_bw))])
@@ -56,7 +56,11 @@ def cmpLog(mixnet, mal_bw_frac, batch_threshold, setting = "static", adv_type = 
     attack_row = [num_mal, mal_bw_frac, batch_threshold, mixnet.total_bw] + \
                   mixnet.bad_num + mixnet.layer_num + mixnet.bad_bw + \
                   mixnet.layer_bw + layer_frac + \
-                  [circuit_profit, attack_profit, attack_succ, num_guards]
+                  [circuit_profit, attack_profit, attack_succ]
+    # attack_row = [num_mal, mal_bw_frac, batch_threshold, mixnet.total_bw] + \
+    #             mixnet.bad_num + mixnet.layer_num + mixnet.bad_bw + \
+    #             mixnet.layer_bw + layer_frac + \
+    #             [circuit_profit, attack_profit, attack_succ, num_guards]
 
     # get layer_no for mix_pool
     if setting == "static":

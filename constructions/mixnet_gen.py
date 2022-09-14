@@ -31,6 +31,7 @@ def mix_select(select_mode, mixnet, batch_threshold, setting):
     """
     select mixes from mix pool
     """
+    mixnet.refresh_total_bw()
     mixnet.mix_select = []
     if setting == "static":
         select_pool, select_bw = get_batch_bw_static(mixnet, batch_threshold)
@@ -84,7 +85,7 @@ def select_by_bw(mixnet, all_mixes, batch_bw):
     """
     How many nodes should be selected? -- total bandwidth == threshold
     """
-    print('--------bwSelection starts--------')
+    print('>>>Sampling mixes by bandwidth...')
     # select one mix at a time until total mixes reach bandwidth batch threshold
     while True:
         weights      =  [m.bandwidth / sumup.sum_mix_bw(all_mixes) for m in all_mixes]
@@ -93,11 +94,11 @@ def select_by_bw(mixnet, all_mixes, batch_bw):
         all_mixes    =  remove_mix(all_mixes, sample_mix)
         if sumup.sum_mix_bw(mixnet.mix_select) >= batch_bw:
             # mixnet.disp_mix_select(batch_threshold)
-            print('--------bwSelection ends--------')
+            # print('>>>bwSelection ends...')
             break
 
 def select_by_rand(mixnet, all_mixes, batch_bw):
-    print('>>>randSelection starts...')
+    print('>>>Sampling mixes randomly...')
     # select one mix randomly at a time until total bandwidth reach batch threshold
     select_pool_bw = sumup.sum_mix_bw(all_mixes)
     while True:
@@ -110,7 +111,7 @@ def select_by_rand(mixnet, all_mixes, batch_bw):
         all_mixes    =  remove_mix(all_mixes, sample_mix)
         if sumup.sum_mix_bw(mixnet.mix_select) >= batch_bw:
             # mixnet.disp_mix_select(batch_threshold)
-            print('>>>randSelection ends...')
+            # print('>>>randSelection ends...')
             break
         if len(all_mixes) == 0:
             print('!!!Non-guard nodes are insufficient!')
@@ -123,10 +124,11 @@ def hybrid_mixnet(mixnet, batch_threshold, e, select_mode, bp_method="lp"):
     # use bw to sample guard layer
     # use randomness to sample other layers
     assert(mixnet.guard == True)
+    mixnet.refresh_total_bw()
     if e == 0:
         all_mixes, batch_bw = get_batch_bw_static(mixnet, batch_threshold)
-        print("+"*10, "Guard Layer Sampling", "+"*10)
-        print(f'guard: {mixnet.guard}, is_dirty: {mixnet.is_dirty}')
+        print(">>>Sampling mixes for guard layer...")
+        # print(f'guard: {mixnet.guard}, is_dirty: {mixnet.is_dirty}')
         mixnet.is_dirty = True
         mixnet.mix_net[GUARD_LAYER] = []
         # select guard layer if is_dirty == false
@@ -137,8 +139,8 @@ def hybrid_mixnet(mixnet, batch_threshold, e, select_mode, bp_method="lp"):
             all_mixes    =  remove_mix(all_mixes, sample_mix)
             if sumup.sum_mix_bw(mixnet.mix_net[GUARD_LAYER]) >= batch_bw/3:
                 # mixnet.disp_mix_select(batch_threshold)
-                print('--------Guard Sampling ends--------')
-                print(f'guard: {mixnet.guard}, is_dirty: {mixnet.is_dirty}')
+                # print('--------Guard Sampling ends--------')
+                # print(f'guard: {mixnet.guard}, is_dirty: {mixnet.is_dirty}')
                 break
         # mixnet.disp_mixnet()
 
@@ -159,8 +161,6 @@ def hybrid_mixnet(mixnet, batch_threshold, e, select_mode, bp_method="lp"):
             # place other layers
             mix_place("bp", mixnet, batch_threshold, bp_method)
     elif e > 0:
-        mixnet.mix_net["layer_0"] = []
-        mixnet.mix_net["layer_2"] = []
         if select_mode == "rand":
             # select other layers
             mixnet.mix_select   = [] 
@@ -195,7 +195,7 @@ def mix_place(place_mode, mixnet, batch_threshold, bp_method="lp"):
     # print('-'*20)
     # print(f'selected bw: {sumup.sum_mix_bw(mixnet.mix_select)}')
     # print('-'*20)
-
+    mixnet.refresh_total_bw()
     if mixnet.guard: # fixed not first epoch, keep middle layer
         assert(len(mixnet.mix_net[GUARD_LAYER])>0)
         for l in ['layer0', 'layer1', 'layer2']: # set other layers empty 
@@ -222,7 +222,7 @@ def place_rand(mixnet):
     VRF() -> y, y is the random number
     l = y mod 3, l is the final chosen layer index
     """
-    print('>>>vrfPlacement starts...')
+    print('>>>Place the mixes by random placement...')
     # alpha_string = random.getrandbits(256).to_bytes(32, 'little')
 
     # layer_index = []
@@ -240,10 +240,10 @@ def place_rand(mixnet):
         create_net(mixnet, replace_layer_index(layer_index))
     else: # place three layers
         create_net(mixnet, layer_index)
-    print('>>>vrfPlacement ends...')
+    print('>>>Random Placement ends...')
 
 def constrained_place_rand(mixnet):
-    print(">>>Random placement with constraint")
+    print(">>>Place the mixes by random placement...")
     total_bw = 11401.2045713556
     diff_threshold = 0.07 * total_bw
     iter_count = 0
@@ -263,7 +263,7 @@ def constrained_place_rand(mixnet):
                 create_net(mixnet, replace_layer_index(layer_index))
             else: # place three layers
                 create_net(mixnet, layer_index)
-            print('>>>vrfPlacement ends...')
+            # print('>>>vrfPlacement ends...')
             break
         else:
             iter_count += 1
@@ -278,13 +278,13 @@ def place_bp(mixnet, bp_method):
     TODO: capacity is changing with batch_threshold
     when batch_threshold is low, capacity should be bigger proportion compared to when the batch_threshold is high
     """
-    print('>>>binpackingPlacement starts...')
+    print('>>>Place the mixes by binpacking placement...')
     # set the capacity for each bin
     weight   = [m.bandwidth for m in mixnet.mix_select]
     # assert(mixnet.guard == True)
     if mixnet.guard:
         capacity = mixnet.total_bw * (sum(weight)/mixnet.total_bw/2 + 0.003)
-        print(f">>>capacity for one bin is {capacity}")
+        # print(f">>>capacity for one bin is {capacity}")
     else:
         capacity = mixnet.total_bw * (sum(weight)/mixnet.total_bw/3 + 0.003) # 0.003(0.75 0.45) --> 0.03[0.35]
 
@@ -310,11 +310,11 @@ def place_bp(mixnet, bp_method):
     else:
         create_net(mixnet, bin_for_item)
 
-    print('>>>binpackingPlacement ends--------')
+    # print('>>>binpackingPlacement ends--------')
 
 def replace_layer_index(layer_index):
     # for fixed case of bp placement: replace '1' by '2'
-    print(">>>Replacing layer index")
+    # print(">>>Replacing layer index")
     for l in layer_index:
         assert(l in [0, 1])
 
@@ -330,7 +330,7 @@ def place_layer(mixnet, batch_threshold):
     """
     implementation of layer placement
     """
-    print('--------layerPlacement starts--------')
+    print('>>layerPlacement starts--------')
     select_bw = [m.bandwidth for m in mixnet.mix_select]
     try:
         layer_threshold = batch_threshold / 3 * 0.99 * mixnet.total_bw 
@@ -375,6 +375,12 @@ def create_net(mixnet, layer_index):
                     mixnet.bad_bw[int(GUARD_LAYER[-1])]  += m.bandwidth
                 mixnet.layer_bw[int(GUARD_LAYER[-1])] += m.bandwidth
         mixnet.layer_num = [len(l) for l in mixnet.mix_net.values()]
+
+        print(">>>============mixnet info start=============")
+        print(f'bandwidth of each layer: {mixnet.layer_bw}')
+        print(f'number of bad nodes in each layer: {mixnet.bad_num}')
+        print(f'bandwidth of bad nodes in each layer: {mixnet.bad_bw}')
+        print(">>>============mixnet info end============")
     except IndexError as e:
         print(f'Create mixnet failed: {e}')
 

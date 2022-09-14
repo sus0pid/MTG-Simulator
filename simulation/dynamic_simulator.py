@@ -9,19 +9,23 @@ from bowtie import *
 from bwrand import *
 from randrand import *
 from randbp import *
+from datetime import datetime
 
 def dynamic_simulation(algorithm):
+    print(f">>>Generating stratified mixnet using {algorithm} with network churn...")
+    now = datetime.now()
+    print(f">>>{now.strftime('%d-%m-%Y %H:%M:%S')}")
     with open('config_template.json') as json_file:
         config = json.load(json_file)
 
     # remove the old log directory and create the new directory
     benign_mixes_dir = "../Benign_Mixes"
-    benign_mixes_num = 1000
-    log_dir = os.path.join("../integration_test/logs", algorithm+"_"+config["network"]["setting"])
-    config["log_dir"] = log_dir
-    config["benign_mixes_num"] = benign_mixes_num
+    config["benign_mixes_num"] = 1000
     config["algorithm"] = algorithm
     config["network"]["setting"] = "dynamic"
+    log_dir = os.path.join("../integration_test/logs", algorithm+"_"+config["network"]["setting"])
+    config["log_dir"] = log_dir
+
     if not os.path.exists(log_dir):
         print(">>> Create new log directory.")
         os.makedirs(log_dir)

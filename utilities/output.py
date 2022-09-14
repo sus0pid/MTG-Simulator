@@ -118,8 +118,7 @@ def write_attack_log(config, atk_logs):
                     'bad_bw_l0', 'bad_bw_guard', 'bad_bw_l2', 
                     'lay_bw_l0', 'lay_guard', 'lay_bw_l2',
                     'bw_frac_l0', 'bw_frac_guard', 'bw_frac_l2', 
-                    'circuit_controlled', 'attack_profit', 'attack_succ', 
-                    'num_guards']
+                    'circuit_controlled', 'attack_profit', 'attack_succ']
     if config["network"]["setting"] == "dynamic":
         with open(os.path.join(config["log_dir"], '{0}_{1}_log.csv'.\
                             format( config["algorithm"], 
