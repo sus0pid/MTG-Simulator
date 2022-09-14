@@ -18,7 +18,13 @@
 # output_dir: recoded (different test writes to different directory)
 # batch threshold: 0.75
 
+echo "MTG Simulator: running examples"
+echo ""
+
 python3 MTG_test.py || exit 1
 # python3 test_scripts/test_2_RandRand.py || exit
 # python3 test_scripts/test_3_RandBP.py || exit 1
 # python3 test_scripts/test_4_BowTie.py || exit 1
+echo ""
+echo "MTG Simulator: All examples run successfully!"
+
