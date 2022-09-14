@@ -56,16 +56,16 @@ After calling this function
 ```bash
 dynamic_simulation("bowtie")
 ```
-, MTG generator will simulate the configuration process for *epoch_num* (see "./integration_test/config_template.json") epochs.
+, MTG generator will simulate the configuration process for *epoch_num* (see `./integration_test/config_template.json`) epochs.
 The programing runtime can be reduced with fewer epochs (we have *epoch_num*=20 in the examples). 
 
-Another important parameter in "config_template.json" file is "construction"-"sample_fraction" that indicates the relative size of mixes' bandwidth being selected into mixnet from mix pool. 
+Another important parameter in `config_template.json` file is `construction:sample_fraction` that indicates the relative size of mixes' bandwidth being selected into mixnet from mix pool. 
 
-"adversary""bw_fraction" is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
+`adversary:bw_fraction` is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
 
-Three csv files are saved in the path "./integration_test/logs/bowtie_dynamic", we illustrate the most important two documents:
-- *bowtie_dynamic_layout.csv* records the specific topologies of each mix node during every epoch. We use four digits to represent the position of mixes: -1: mix was not in the network, 0/1/2: mix was in layer0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
+Three csv files are saved in the path `./integration_test/logs/bowtie_dynamic`, we illustrate the most important two documents:
+- `bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of mixes: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
 
-- *bowtie_dynamic_log.csv* shows the 
+- `bowtie_dynamic_log.csv` shows the 
 
 
