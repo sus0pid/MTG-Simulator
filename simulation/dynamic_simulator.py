@@ -49,17 +49,20 @@ def dynamic_simulation(algorithm):
     start = time.time()
     print(f">>> Simulation of {algorithm} construction.")
     if algorithm.lower() == "bowtie":
-        config["adversary"]["num_malicious_nodes"] = 20 #TODO: set the best strategy
+        config["adversary"]["num_malicious_nodes"] = 110
         config["network"]["guard"]["enabled"] = True
         dynamic_bowtie(mix_pool, config)
     elif algorithm.lower() == "bwrand":
-        config["adversary"]["num_malicious_nodes"] = 20
+        config["adversary"]["num_malicious_nodes"] = 32
+        config["network"]["guard"]["enabled"] = False
         dynamic_bwrand(mix_pool, config)
     elif algorithm.lower() == "randrand":
-        config["adversary"]["num_malicious_nodes"] = 20
+        config["adversary"]["num_malicious_nodes"] = 192
+        config["network"]["guard"]["enabled"] = False
         dynamic_randrand(mix_pool, config)
     elif algorithm.lower() == "randbp":
-        config["adversary"]["num_malicious_nodes"] = 20
+        config["adversary"]["num_malicious_nodes"] = 194
+        config["network"]["guard"]["enabled"] = False
         dynamic_randbp(mix_pool, config)
     else:
         print("The algorithm does not match!")

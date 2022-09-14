@@ -172,7 +172,9 @@ def write_onoff(config, on_offs, mixnet):
         on_off_data["epoch_{}".format(idx)] = on_off_col
     df = pd.DataFrame(on_off_data)
     df.insert(loc=0, column='mix_id', value=[i for i in range(num_mix)])
-    path = os.path.join(config["log_dir"], "{0}_{1}_{2}_onoff.csv".format(config["algorithm"], config["network"]["setting"], config["network"]["churn_rate"]["leave_rate"]))
+    path = os.path.join(config["log_dir"], "{0}_{1}_onoff.csv".format(config["algorithm"], config["network"]["setting"]
+    # , config["network"]["churn_rate"]["leave_rate"]
+    ))
     df.to_csv(path, index=False)
 
 def write_gg_times(config, mixnet):

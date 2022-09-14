@@ -23,7 +23,7 @@
         "bw_fraction": 0.2, 
         "num_malicious_nodes": 20
     },
-    "epoch_num": 2,
+    "epoch_num": 20,
     "algorithm": "bwrand",
     "num_processes": 4
 }

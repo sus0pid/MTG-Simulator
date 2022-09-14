@@ -44,20 +44,23 @@ def static_simulation(algorithm):
         config["adversary"]["bw_fraction"])
 
     if config["algorithm"].lower() == "bowtie":
-        config["adversary"]["num_malicious_nodes"] = 20 #TODO: set the best
+        config["adversary"]["num_malicious_nodes"] = 110
         config["network"]["guard"]["enabled"] = True
         static_bowtie(mix_pool, config)
         # mng.hybrid_mixnet(mixnet, args.batch_threshold, args.binpack_solver, e)
     elif config["algorithm"].lower() == "bwrand":
-        config["adversary"]["num_malicious_nodes"] = 20 #TODO: set the best 
+        config["adversary"]["num_malicious_nodes"] = 32
+        config["network"]["guard"]["enabled"] = False
         static_bwrand(mix_pool, config)
         # mng.mix_select(args.select_mode, mixnet, args.batch_threshold)
         # mng.mix_place(args.place_mode, mixnet, args.batch_threshold, args.binpack_solver) # bp_method: ffd, wfd, bfd, lp
     elif config["algorithm"].lower() == "randrand":
-        config["adversary"]["num_malicious_nodes"] = 20 #TODO: set the best 
+        config["adversary"]["num_malicious_nodes"] = 192
+        config["network"]["guard"]["enabled"] = False
         static_randrand(mix_pool, config)
     elif config["algorithm"].lower() == "randbp":
-        config["adversary"]["num_malicious_nodes"] = 20 #TODO: set the best 
+        config["adversary"]["num_malicious_nodes"] = 194
+        config["network"]["guard"]["enabled"] = False
         static_randbp(mix_pool, config)
     else:
         print("Incorrect algorithm.")

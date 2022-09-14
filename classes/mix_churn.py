@@ -1,6 +1,5 @@
 import numpy as np
 import sumup
-import pprint as pp
 import sys
 sys.path.append("../constructions")
 import mix_gen as mg
@@ -43,13 +42,14 @@ def constant_churn_nums(churn_rates, total_mixes):
         "new_good_num": round(total_mixes * churn_rates["new_good_rate"]),
         "new_bad_num": round(total_mixes * churn_rates["new_bad_rate"])
     }
-    pp.pprint(churn_nums)
+    # pp.pprint(churn_nums)
     return churn_nums
 
 
 def natural_churn(mixnet, epoch_idx, is_poisson, churn_nums):
     # leaving and coming back
     # both mal and honest nodes can go offline
+    # network churn for next epoch: current_epoch + 1
     online_mixes = mixnet.get_active_mix()
     offline_mixes = mixnet.get_down_mix()
     if is_poisson:
@@ -86,19 +86,19 @@ def natural_churn(mixnet, epoch_idx, is_poisson, churn_nums):
         new_bad_num, len(mixnet.mix_pool), True, epoch_idx)
     mixnet.mix_pool.extend(new_bad_this_epoch)
 
-    print(f'\n>>>EPOCH {epoch_idx} network churn as below')
-    print(
-        f">>>{len(leave_this_epoch)} nodes leave, which was supposed to be {leave_num} nodes.")
-    # disp_mixes(leave_this_epoch)
-    # print("\n")
-    print(
-        f">>>{len(back_this_epoch)} nodes back, which was supposed to be {back_num} nodes.")
-    # disp_mixes(back_this_epoch)
-    # print('\n')
-    print(f">>>{len(new_good_this_epoch)} good nodes join, which was supposed to be {new_good_num} nodes.")
-    # disp_mixes(new_good_this_epoch)
-    # print('\n')
-    print(f">>>{len(new_bad_this_epoch)} bad nodes join, which was supposed to be {new_bad_num} nodes.")
+    # print(f'\n>>>EPOCH {epoch_idx} network churn as below')
+    # print(
+    #     f">>>{len(leave_this_epoch)} nodes leave, which was supposed to be {leave_num} nodes.")
+    # # disp_mixes(leave_this_epoch)
+    # # print("\n")
+    # print(
+    #     f">>>{len(back_this_epoch)} nodes back, which was supposed to be {back_num} nodes.")
+    # # disp_mixes(back_this_epoch)
+    # # print('\n')
+    # print(f">>>{len(new_good_this_epoch)} good nodes join, which was supposed to be {new_good_num} nodes.")
+    # # disp_mixes(new_good_this_epoch)
+    # # print('\n')
+    # print(f">>>{len(new_bad_this_epoch)} bad nodes join, which was supposed to be {new_bad_num} nodes.")
     # disp_mixes(new_bad_this_epoch)
     # print("\n")
     print(

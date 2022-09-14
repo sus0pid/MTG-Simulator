@@ -22,8 +22,7 @@ def dynamic_bowtie(mix_pool, config):
     layouts = []
     on_offs = []
     for e in range(config["epoch_num"]):   
-        print(
-            '\n\n==============================================================================')
+        print('\n'+'='*20)
         print(f'>>>EPOCH-{e}')
 
         # 0. check mix_id duplication
@@ -61,8 +60,8 @@ def dynamic_bowtie(mix_pool, config):
 
         # 4. natural churn
         print(">>>Natural churn is happening.")
-        print(
-            f">>>number of online mixes before churn: {mixnet.get_online_counts()}")
+        # print(
+        #     f">>>number of online mixes before churn: {mixnet.get_online_counts()}")
         mc.natural_churn(mixnet, 
                         e+1, 
                         is_poisson=False,
@@ -70,8 +69,7 @@ def dynamic_bowtie(mix_pool, config):
                         mixnet.get_online_counts()))
         # nodes go offline, nodes go back, new nodes joining for the next epoch
         # dob of new nodes == e+1 rather than e
-        print(
-            '\n==============================================================================\n\n')
+        # print('\n'+'='*20)
 
         attack_row.insert(0, e)
         atk_logs.append(attack_row)
@@ -96,6 +94,8 @@ def static_bowtie(mix_pool, config):
                     config["benign_mixes_num"], 
                     True)
     for e in range(config["epoch_num"]):
+        print('\n'+'='*20)
+        print(f'>>>EPOCH-{e}')
         mng.hybrid_mixnet(mixnet, 
                         config["construction"]["sample_fraction"],
                         e, 
@@ -104,6 +104,7 @@ def static_bowtie(mix_pool, config):
         attack_row, layout_col = pl.cmpLog(mixnet, 
                                         config["adversary"]["bw_fraction"], config["construction"]["sample_fraction"],
                                         config["network"]["setting"])
+        # print('\n'+'='*20)
         attack_row.insert(0, e)
         atk_logs.append(attack_row)
         layouts.append(layout_col)
@@ -113,7 +114,7 @@ def static_bowtie(mix_pool, config):
     output.write_layout(config, layouts, mixnet.mix_pool)
 
     done = time.time() - start
-    print(f'bowtie simulation spent {done} seconds')
+    # print(f'bowtie simulation spent {done} seconds')
     # res = [attack_row, 
     #         layout_col, 
     #         [config["adversary"]["num_malicious_nodes"], done], 

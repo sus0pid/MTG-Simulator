@@ -376,11 +376,11 @@ def create_net(mixnet, layer_index):
                 mixnet.layer_bw[int(GUARD_LAYER[-1])] += m.bandwidth
         mixnet.layer_num = [len(l) for l in mixnet.mix_net.values()]
 
-        print(">>>============mixnet info start=============")
-        print(f'bandwidth of each layer: {mixnet.layer_bw}')
-        print(f'number of bad nodes in each layer: {mixnet.bad_num}')
-        print(f'bandwidth of bad nodes in each layer: {mixnet.bad_bw}')
-        print(">>>============mixnet info end============")
+        # print(">>>============mixnet info start=============")
+        # print(f'bandwidth of each layer: {mixnet.layer_bw}')
+        # print(f'number of bad nodes in each layer: {mixnet.bad_num}')
+        # print(f'bandwidth of bad nodes in each layer: {mixnet.bad_bw}')
+        # print(">>>============mixnet info end============")
     except IndexError as e:
         print(f'Create mixnet failed: {e}')
 
