@@ -63,12 +63,13 @@ Another important parameter in `config_template.json` file is `construction:samp
 
 `adversary:bw_fraction` is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
 
-### Topologies & End-to-end compromised fraction
-Two important csv files generated with the path `./integration_test/logs/bowtie_dynamic` are illustrated below:
+### Output 1: Generated Topologies
+There are three csv files generated with the path `./integration_test/logs/bowtie_dynamic`. First, we illustrate the file that describes the detailed topologies of mixnet.
 
-- `bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of each mix: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
+`bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of each mix: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
 
-- `bowtie_dynamic_log.csv` shows the information of the mixnet during each epoch and the definition of important column is listed below:
+### Output 2: End-to-end compromised fraction
+Under the same directory, `bowtie_dynamic_log.csv` shows the information of the mixnet during each epoch and the definition of important column is listed below:
 
     | Column_name       | Description |
     | :------           |:------------|
@@ -88,13 +89,14 @@ Two important csv files generated with the path `./integration_test/logs/bowtie_
 
 <!-- - `bowtie_dynamic_onoff.csv`: this file is mainly for tracking the online/offline status of each mix node. -->
 
-### Guessing entropy
+### Output 3: Guessing entropy
 Guessing entropy, another security metric in section 6.2.3, can be calculated based on the generated topologies in `bowtie_dynamic_layout.csv`. To achieve this, run the following command in your terminal:
 ```bash
 cd metrics
 python3 guessing_entropy.py --topology "../integration_test/logs/bowtie_dynamic/bowtie_dynamic_layout.csv"
 ```
-The results shows the average guessing entropy over several epochs, and the specific guessing entropy for each epoch.
+The results shows the average guessing entropy over several epochs, along with the seperate guessing entropy for each epoch.
+
 
 
 
