@@ -26,21 +26,37 @@ The adversary can deanonymise all messages travel through a path that is compose
 
 1. Prerequisite:
     - Python version 3.7+
-    - Recent linux/unix operating system (e.g., Ubuntu 20.04 or Mac os 12+)
-2. Install [Gurobi](https://www.gurobi.com/academia/academic-program-and-licenses/)
-    1. download [Gurobi Optimizer](https://www.gurobi.com/downloads/)
-    2. After downloading, follow the instructions in README.txt to install the software.
+    - Recent linux/unix operating system (e.g., Ubuntu 20.04)
+2. Install [Gurobi](https://www.gurobi.com/)
+    1. Download [Gurobi Optimizer](https://www.gurobi.com/downloads/):
+        - In order to download the optimizer, you need to register or log in first. 
+        - Download `gurobi9.5.2_linux.tar.gz` for x64 linux.
+    2. After downloading, follow the [Software Installation Guide](https://www.gurobi.com/documentation/9.5/quickstart_linux/software_installation_guid.html) to install the software.
+        ```bash
+        sudo mv gurobi9.5.2_linux64.tar.gz /opt
+        tar xvfz gurobi9.5.2_linux64.tar.gz
+        export GUROBI_HOME="/opt/gurobi952/linux64"
+        export PATH="${PATH}:${GUROBI_HOME}/bin"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
+        ```
+        Then you close the terminal and reopen it to active the setting.
     3. Once installed, visit the [Free Academic License](https://www.gurobi.com/downloads/end-user-license-agreement-academic/) page to request the free license.
-    4. Next, run grbgetkey using the argument provided on the Academic License Detail page (ex: grbgetkey ae36ac20-16e6-acd2-f242-4da6e765fa0a). 
+    4. Lastly, run the following command:
+        ```bash
+        cd gurobi952/linux64/bin
+        bash gurobi.sh
+        ```
+        It will require the input of your key in the format such as `ae36ac20-16e6-acd2-f242-4da6e765fa0a`.
+        Once the file `gurobi.lic` is generated, you have successfully set up your license!
    
    See [Other Installation Methods](https://www.gurobi.com/academia/academic-program-and-licenses/) if
     you're using other licenses.
    
-   <!-- python -m pip install gurobipy -->
 3. Install dependencies
     ```bash
     bash mtg_install_dependencies.sh
     ```
+
 4. Run examples:
     ```bash
     cd integration_test
@@ -103,7 +119,7 @@ We also evaluate the expected queuing delay in section 6.2.4, as the performance
 cd metrics
 python3 proc_waiting_time.py --l 1000 --path "../integration_test/logs/randrand_dynamic/randrand_dynamic_layout.csv"
 ```
-The results show the average queuing delay over several epochs, along with the specific queuing delay for each epoch.
+The results show the average queuing delay over several epochs, along with the specific queuing delay for each epoch. 
 
 
 
