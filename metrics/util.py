@@ -9,7 +9,7 @@ def parse_topology(topo_path):
     'config1': {...}, ..., 'configN':{...}}}
 
     """
-    topology = {'epoch_0': {'-1':{}, '0':{}, '1':{}, '2':{}}}
+    topology = {'epoch_0': {'-2':{}, '-1':{}, '0':{}, '1':{}, '2':{}}}
     with open(topo_path) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -21,7 +21,7 @@ def parse_topology(topo_path):
                 i = 0
                 while 'epoch_'+str(i) in row:
                     if 'epoch_'+str(i) not in topology:
-                        topology['epoch_'+str(i)] = {'-1':{}, '0':{}, '1':{}, '2':{}}
+                        topology['epoch_'+str(i)] = {'-2':{}, '-1':{}, '0':{}, '1':{}, '2':{}}
                     topology['epoch_'+str(i)][row['epoch_'+str(i)]][row['mix_id']] = [float(row['bandwidth']), row['malicious']]
                     i+=1
     return topology
