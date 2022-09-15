@@ -46,13 +46,13 @@ The adversary can deanonymise all messages travel through a path that is compose
     cd integration_test
     bash run_integration_test.sh
     ```
-    Here, four mixnet topological construction algorithms are used to generate mixnet topologies in a dynamic and static setting seperately; the results are saved under the directory of `./integration_test/logs/*algorithm*_dynamic/`. We consider the natural network churn in the dynamic setting while mixes are assumed to always online in the static setting. The output of the console is redirected to the text file `./integration_test/logs/console_log.txt`. 
+    Here, four mixnet topological construction algorithms are used to generate mixnet topologies in a dynamic and static setting seperately; the results are saved under the directory of `./integration_test/logs/*algorithm*_dynamic/`. We consider the natural network churn in the dynamic setting (i.e., realistic case), while mixes are assumed to be always online in the static setting (i.e., ideal case). The output of the console is redirected to the text file `./integration_test/logs/console_log.txt`. 
 
 ## An example & results
 
 ### Example of bowtie topological construction algorithm with network churn
-Here, we take *bowtie* in a *dynamic* setting as an example to illustrate the specific details.
-After calling this function 
+Here, we take *bowtie* in a *static* setting as an example to illustrate the specific details.
+After calling the following function in `MTG_test.py`
 ```bash
 dynamic_simulation("bowtie")
 ```
@@ -63,8 +63,8 @@ Another important parameter in `config_template.json` file is `construction:samp
 
 `adversary:bw_fraction` is also important as it sets the bandwidth budget of malicious mixes that the adversary could control/corrupt.
 
-### Illustration of results
-Three csv files generated with the path `./integration_test/logs/bowtie_dynamic` are illustrated below:
+### Topologies & End-to-end compromised fraction
+Two important csv files generated with the path `./integration_test/logs/bowtie_dynamic` are illustrated below:
 
 - `bowtie_dynamic_layout.csv` records the specific topologies of each mix node during every epoch. We use four digits to represent the position of each mix: -1: mix was not in the network, 0/1/2: mix was assigned to layer 0/1/2. Note that ***routsim*** takes this file as the input and evaluate the client's privacy overtime based on the topologies of each epoch.
 
@@ -83,6 +83,19 @@ Three csv files generated with the path `./integration_test/logs/bowtie_dynamic`
     |bw_frac_l0/guard/l2|fraction of total_bw|
     |attack_profit      |end-to-end compromised fraction of paths|
     |attack_succ        |whether the adversary controls at least one end-to-end path|
+
+    Note that the `attack_profit` is one of our security metric in section 6.2.2.
+
+<!-- - `bowtie_dynamic_onoff.csv`: this file is mainly for tracking the online/offline status of each mix node. -->
+
+### Guessing entropy
+Guessing entropy, another security metric in section 6.2.3, can be calculated based on the generated topologies in `bowtie_dynamic_layout.csv`. To achieve this, run the following command in your terminal:
+```bash
+cd metrics
+python3 guessing_entropy.py --topology "../integration_test/logs/bowtie_dynamic/bowtie_dynamic_layout.csv"
+```
+The results shows the average guessing entropy over several epochs, and the specific guessing entropy for each epoch.
+
 
 
 
